@@ -177,12 +177,6 @@ class Connection(object):
             return cursor.lastrowid
         finally:
             cursor.close()
-            
-    update = execute_rowcount
-    updatemany = executemany_rowcount
-
-    insert = execute_lastrowid
-    insertmany = executemany_lastrowid
     
     def executemany_rowcount(self, query, parameters):
         """Executes the given query against all the given param sequences.
@@ -219,7 +213,12 @@ class Connection(object):
             self.close()
             raise
 
+    update = execute_rowcount
+    updatemany = executemany_rowcount
 
+    insert = execute_lastrowid
+    insertmany = executemany_lastrowid
+    
 class Row(dict):
     """A dict that allows for object-like property access syntax."""
     def __getattr__(self, name):
