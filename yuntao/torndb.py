@@ -101,7 +101,7 @@ class Connection(object):
         self.close()
         self._db = mysql.connector.connect(autocommit=True, **self._db_args)
         #修复一个bug,这里不能直接调用execute,因为execute里又会检查连接是否过期，一旦过期又会调用reconnect,从而产生死循环
-        self._execute(self._db.cursor(), self._db_init_command)
+        #self.execute(self._db_init_command)
 
     def iter(self, query, *parameters):
         """Returns an iterator for the given query and parameters."""
