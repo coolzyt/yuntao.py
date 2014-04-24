@@ -21,21 +21,18 @@ import tornado.options
 from tornado.options import define, options
 from tornado import web
 from yuntao import log
-
-class Hello(tornado.web.RequestHandler):
-    def get(self):
-        self.write("Hello,World2")
+from yuntao import dao
 
 def main():
+    #dao.init("127.0.0.1","yuntao",user="root",password="root",poolsize=5);
     import os
     tornado.options.parse_command_line()
-    static_path = os.path.join(os.path.dirname(__file__),"static")
+    static_path = os.path.join(os.path.dirname(__file__),"./pages/")
     application = tornado.web.Application([
-        (r"/static/(.*)", web.StaticFileHandler, {"path": static_path}),
-         (r"/hello", Hello),
+		(r"/(.*)", web.StaticFileHandler, {"path": static_path}), #只是为了本地调试用
     ])
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(18080)
+    http_server.listen(18080,address="127.0.0.1")
     log.info("Server start at %d",18080)
     tornado.ioloop.IOLoop.instance().start()
 
