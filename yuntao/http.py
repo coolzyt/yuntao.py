@@ -7,7 +7,7 @@ Created on 2013-7-11
 import gzip
 import io
 import urllib.request, urllib.error, urllib.parse
-import logging
+from yuntao import log
 import re
 
 def post(url,body):
@@ -25,7 +25,7 @@ def get(url):
     filehandle = urllib.request.urlopen(req)
     return filehandle.read()
 
-_regex_charset = 'charset="?(GBK|GB2312|UTF8|UTF-8)"?'
+_regex_charset = '(charset|encoding)="?(GBK|GB2312|UTF8|UTF-8)"?'
 def fetchurl(url,encoding="utf8"):
     """
                 输出url的文档内容
@@ -45,17 +45,16 @@ def fetchurl(url,encoding="utf8"):
         ret = gzipper.read()
     else:
         ret = filehandle.read()
+    ret = ret.decode();
     if matcher is None:
         matcher = re.search(_regex_charset,ret,re.I)
     if matcher is not None:
-        charset = matcher.group(1)
-        logging.info("源文件编码为:"+charset)
+        charset = matcher.group(2)
+        log.info("源文件编码为:"+charset)
         if charset.lower() in ("utf8,utf-8") and encoding.lower() in ("utf8,utf-8"):
             pass;
         elif charset.lower() != encoding.lower():
-            logging.info("进行转码,从"+charset+"转为"+encoding);
-            ret = ret.decode(charset,"ignore").encode(encoding,"ignore")
+            log.info("进行转码,从"+charset+"转为"+encoding);
+            ret = ret.encode(charset,"ignore").decode(encoding,"ignore")
     filehandle.close()
     return ret;
-
-print(post("http://m.taobao.com/",b""))

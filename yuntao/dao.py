@@ -7,7 +7,7 @@ Created on 2013年8月21日
 import threading
 from . import torndb
 from . import log
-import queue
+from . import pool
 class _Context:
     pass;
 
@@ -28,7 +28,7 @@ def init(host, database, user=None, password=None,poolsize=10):
         context.user = user;
         context.password = password;
         context.poolsize = poolsize
-        context._connection_pool = queue.Queue(poolsize) 
+        context._connection_pool = pool.Pool(poolsize) 
         for i in range(context.poolsize):
             context._connection_pool.put(torndb.Connection(context.host, context.database, context.user, context.password))
         context.initialed = True

@@ -22,6 +22,9 @@ def str2datetime(datetime_str,format="%Y-%m-%d %H:%M:%S"):
 def current_timestampms():
     return int(time.time()*1000)
 
+def current_timestamps():
+    return int(time.time())
+
 def timestampms2datetime(timestamp):
     return datetime.datetime.fromtimestamp(timestamp/float(1000));
 
