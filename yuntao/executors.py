@@ -85,7 +85,7 @@ class ScheduleTask(Task):
         self.args = args
         self.kwargs = kwargs
 
-class CoreScheduleThread(Thread):
+class _CoreScheduleThread(Thread):
     def __init__(self,threadpool):
         self.scheduletasks = [];
         self.tasklock = Lock();
@@ -121,7 +121,7 @@ class ScheduledThreadPool(ThreadPool):
     
     def __init__(self,worker_num):
         ThreadPool.__init__(self,worker_num)
-        self.core_thread = CoreScheduleThread(self)
+        self.core_thread = _CoreScheduleThread(self)
         self.core_thread.start()
         
     def schedule(self,function,delay=0,period=0,*args,**kwargs):

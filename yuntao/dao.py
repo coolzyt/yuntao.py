@@ -4,70 +4,58 @@ Created on 2013年8月21日
 数据库访问层
 @author: zhaoyuntao
 '''
-import threading
 from . import torndb
 from . import log
 from . import pool
-class _Context:
-    pass;
-
-context = _Context()
-context.lock = threading.Lock();
-context.initialed = False
 from . import dates
-def init(host, database, user=None, password=None,poolsize=10):
-    try:
-        context.lock.acquire();
-        if context.initialed:
-            log.debug("已经进行过初始化");
-            return;
+
+class Dao:
+    def __init__(self,host, database, user=None, password=None,poolsize=10):
+        self.initialed = False
         start = dates.current_timestampms()
         log.debug("开始初始化连接池");
-        context.host = host;
-        context.database = database;
-        context.user = user;
-        context.password = password;
-        context.poolsize = poolsize
-        context._connection_pool = pool.Pool(poolsize) 
-        for i in range(context.poolsize):
-            context._connection_pool.put(torndb.Connection(context.host, context.database, context.user, context.password))
-        context.initialed = True
+        self.host = host;
+        self.database = database;
+        self.user = user;
+        self.password = password;
+        self.poolsize = poolsize
+        self._connection_pool = pool.Pool(poolsize)
+        for i in range(poolsize):
+            self._connection_pool.put(torndb.Connection(self.host, self.database, self.user, self.password))
         log.debug("初始化连接池结束,花费时间%dms"%(dates.current_timestampms()-start));
-    finally:
-        context.lock.release();
+    
+    def _getconnection(self):
+        return self._connection_pool.get(timeout=1)
+    
+    def _returnconnection(self,conn):
+        return self._connection_pool.put(conn,timeout=1)
 
-def _getconnection():
-    return context._connection_pool.get(timeout=1)
-
-def _returnconnection(conn):
-    return context._connection_pool.put(conn,timeout=1)
-
-def _wrapper(func):
-    def executor(*parameters,**kwparameters):
+    def execute(self,func,*parameters,**kwparameters):
+        conn = None;
         try:
-            conn = _getconnection()
+            conn = self._getconnection()
             return getattr(conn,func)(*parameters,**kwparameters)
         finally:
-            _returnconnection(conn)
-    return executor;
+            self._returnconnection(conn)
+    
+    def query(self,*parameters,**kwparameters): return self.execute("query",*parameters,**kwparameters)
+    def insert(self,*parameters,**kwparameters): return self.execute("insert",*parameters,**kwparameters)
+    def insertmany(self,*parameters,**kwparameters): return self.execute("insertmany",*parameters,**kwparameters)
+    def load(self,*parameters,**kwparameters): return self.execute("load",*parameters,**kwparameters)
+    def update(self,*parameters,**kwparameters): return self.execute("update",*parameters,**kwparameters)
+    def updatemany(self,*parameters,**kwparameters): return self.execute("updatemany",*parameters,**kwparameters)
+    def remove(self,*parameters,**kwparameters): return self.execute("remove",*parameters,**kwparameters)
 
-query = _wrapper("query")
-insert = _wrapper("insert")
-insertmany = _wrapper("insertmany")
-load = _wrapper("get")
-update = _wrapper("update")
-updatemany = _wrapper("updatemany")
-remove = update
-def count(*parameters,**kwparameters):
-    result = query(*parameters,**kwparameters)
-    if len(result) == 0:
-        return 0
-    return list(result[0].items())[0][1]
-
-def exists(*parameters,**kwparameters):
-    return count(*parameters,**kwparameters)>0
+    def count(self,*parameters,**kwparameters):
+        result = self.query(*parameters,**kwparameters)
+        if len(result) == 0:
+            return 0
+        return list(result[0].items())[0][1]
+    
+    def exists(self,*parameters,**kwparameters):
+        return self.count(*parameters,**kwparameters)>0
 
 if __name__ == "__main__":
-    init("localhost","test",user="root",password="root",poolsize=10)
-    print(count("select count(0) from user"))
+    dao = Dao("localhost","test",user="root",password="",poolsize=10)
+    print(dao.count("select count(0) from user"))
 
