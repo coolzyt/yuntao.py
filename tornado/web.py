@@ -1321,6 +1321,14 @@ class Application(object):
         if self.settings.get("debug") and not wsgi:
             from tornado import autoreload
             autoreload.start()
+        # 线程模式
+        if self.settings.get("thread_mode"):
+            self.thread_mode = True
+            threadnum = 100
+            if self.settings.get("thread_num"):
+                threadnum = self.settings.get("thread_num")
+            from yuntao import executors
+            self.threadpool = executors.new_threadpool(threadnum)
 
     def listen(self, port, address="", **kwargs):
         """Starts an HTTP server for this application on the given port.
@@ -1475,8 +1483,11 @@ class Application(object):
                 for loader in RequestHandler._template_loaders.values():
                     loader.reset()
             StaticFileHandler.reset()
-
-        handler._execute(transforms, *args, **kwargs)
+        if self.thread_mode:
+            self.threadpool.execute(handler._execute,
+                                    transforms, *args, **kwargs)
+        else:
+            handler._execute(transforms, *args, **kwargs)
         return handler
 
     def reverse_url(self, name, *args):

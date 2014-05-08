@@ -23,8 +23,11 @@ from tornado import web
 from yuntao import log
 from yuntao import dao
 import crawler.rssreader
-from yuntao import dao
-dao.init("localhost", "yuntao", "root", "root", 5)
+import threading
+class Monitor(web.RequestHandler):
+    def get(self):
+        self.write(str(threading.activeCount()))
+
 def main():
     #dao.init("127.0.0.1","yuntao",user="root",password="root",poolsize=5);
     import os
@@ -33,11 +36,11 @@ def main():
     application = tornado.web.Application([
         (r"/pages/rssreader",crawler.rssreader.rssreader),
 		(r"/pages/(.*)", web.StaticFileHandler, {"path": static_path}), #只是为了本地调试用
-        
-    ])
+        (r"/python/monitor", Monitor),
+    ],thread_mode=True,thread_num=200)
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(18080,address="127.0.0.1")
-    log.info("Server start at %d",18080)
+    http_server.listen(80,address="127.0.0.1")
+    log.info("Server start at %d",80)
     tornado.ioloop.IOLoop.instance().start()
 
 

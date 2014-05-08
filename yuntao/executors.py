@@ -143,6 +143,7 @@ class _Worker(Thread):
         while True:
             try:
                 task = queue.get() 
+                log.info("worker执行"+str(task))
                 task._execute()
             except Exception as e:
                 log.exception(e)
