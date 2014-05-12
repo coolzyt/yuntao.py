@@ -7,7 +7,6 @@ from yuntao import dates
 from yuntao import log
 import re
 import xml.etree.ElementTree as etree
-from yuntao import executors
 class Crawler:
     def __init__(self):
         self.dao = common.getdao()
@@ -24,6 +23,10 @@ class Crawler:
                 if re.match("^[a-zA-Z]{3}\\,", pubdate):
                     pubdate = pubdate[0:len("Thu, 19 Feb 2009 16:00:07")] #英文时间格式
                     DATE_FORMAT = '%a, %d %b %Y %H:%M:%S'
+                    pubdate = dates.str2datetime(pubdate, DATE_FORMAT)
+                if re.match("^\d{4}-\d{2}-\d{2}T.{8,}", pubdate):
+                    pubdate = pubdate[0:19]
+                    DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
                     pubdate = dates.str2datetime(pubdate, DATE_FORMAT)
                 if not self.dao.exists("select count(0) from rss_article where source=%s and pubdate=%s",url,pubdate):
                     log.info("采集到文章:%s"%title);

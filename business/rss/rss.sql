@@ -5,4 +5,4 @@ create table rss_article(
 	pubdate datetime not null,
 	source varchar(500) not null,
 	primary key (id)
-)engine innodb;
+)default charset UTF8 ENGINE INNODB ;
