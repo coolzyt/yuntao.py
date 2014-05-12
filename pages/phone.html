@@ -12,7 +12,7 @@
     <header data-title="云涛工作室">
     </header>
     <article id="article_rss" class="list">
-        <ul id="rss_list" class="scroll">
+        <ul id="rss_list" class=" four row scroll anchor">
    		</ul>
     </article>
     <footer>
@@ -42,7 +42,7 @@
 <script src="js/jquery.js"></script>
 <script src="js/yuntao.js"></script>
 <script>
-Lungo.init({});
+
 $.get("/action/readrss",function(result){
 	var data = result.data;
 	var rss_list = $("#rss_list");
@@ -51,7 +51,9 @@ $.get("/action/readrss",function(result){
 		var feed = data[i]
 		rss_list.append(template.format(feed.title,feed.description));
 	}
+	Lungo.Boot.Data.init("#rss_list")
 },"json")
+Lungo.init({});
 </script>
 </body>
 </html>
