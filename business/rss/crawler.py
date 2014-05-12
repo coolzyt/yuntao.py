@@ -2,14 +2,15 @@
 #coding=utf8
 
 from yuntao import http
-from yuntao import dao
+from business import common
 from yuntao import dates
 from yuntao import log
 import re
 import xml.etree.ElementTree as etree
+from yuntao import executors
 class Crawler:
     def __init__(self):
-        self.dao = dao.Dao("localhost", "yuntao", "root", "", 5)
+        self.dao = common.getdao()
         self.seeds = ["http://huoding.com/feed","http://2014.54chen.com/rss.xml"]
   
     def fetchrss(self,url):
@@ -37,8 +38,3 @@ class Crawler:
             except Exception as e:
                 log.debug("采集[%s]的文章发生异常"%url);
                 log.exception(e)
-                
-from yuntao import executors      
-if __name__ == "__main__":
-    s = executors.new_scheduled_threadpool(1)
-    s.schedule(RssCrawler().crawl, 5, 20)
