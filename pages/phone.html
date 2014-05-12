@@ -11,8 +11,8 @@
 <section id="main">
     <header data-title="云涛工作室">
     </header>
-    <article id="article_rss" class="list">
-        <ul id="rss_list" class=" four row scroll anchor">
+    <article id="article_rss" class="list scroll">
+        <ul id="rss_list">
    		</ul>
     </article>
     <footer>
@@ -51,9 +51,9 @@ $.get("/action/readrss",function(result){
 		var feed = data[i]
 		rss_list.append(template.format(feed.title,feed.description));
 	}
-	Lungo.Boot.Data.init("#rss_list")
+	Lungo.init({});
 },"json")
-Lungo.init({});
+
 </script>
 </body>
 </html>
