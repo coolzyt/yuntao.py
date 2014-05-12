@@ -24,7 +24,7 @@ class Crawler:
                     pubdate = pubdate[0:len("Thu, 19 Feb 2009 16:00:07")] #英文时间格式
                     DATE_FORMAT = '%a, %d %b %Y %H:%M:%S'
                     pubdate = dates.str2datetime(pubdate, DATE_FORMAT)
-                if re.match("^\d{4}-\d{2}-\d{2}T.{8,}", pubdate):
+                elif re.match("^\d{4}-\d{2}-\d{2}T.{8,}", pubdate):
                     pubdate = pubdate[0:19]
                     DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
                     pubdate = dates.str2datetime(pubdate, DATE_FORMAT)
