@@ -1322,10 +1322,11 @@ class Application(object):
             from tornado import autoreload
             autoreload.start()
         # 线程模式
-        if self.settings.get("thread_mode"):
-            self.thread_mode = True
+        self.thread_mode = False;
+        if hasattr(self.settings,"thread_mode") and self.settings["thread_mode"] == True:
+            self.thread_mode = True;
             threadnum = 100
-            if self.settings.get("thread_num"):
+            if hasattr(self.settings,"thread_num"):
                 threadnum = self.settings.get("thread_num")
             from yuntao import executors
             self.threadpool = executors.new_threadpool(threadnum)
