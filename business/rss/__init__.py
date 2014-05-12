@@ -7,7 +7,7 @@ import json
 class ReadRss(tornado.web.RequestHandler):
     def get(self):
         dao = common.getdao()
-        datas = dao.query("select * from rss_article");
+        datas = dao.query("select * from rss_article limit 10");
         for data in datas:
             data["description"] = data.description[0:20]
             data["pubdate"] = dates.datetime2str(data.pubdate)
