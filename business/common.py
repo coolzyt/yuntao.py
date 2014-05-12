@@ -12,7 +12,7 @@ def getdao():
         lock.acquire()
         if commonDao is not None:
              return commonDao
-        commonDao = dao.Dao("localhost","yuntao","root","",10)
+        commonDao = dao.Dao("localhost","yuntao","root","root",10)
         return commonDao;
     finally:
         lock.release()
