@@ -31,7 +31,7 @@ def main():
     application = tornado.web.Application([
         (r"/action/readrss",business.rss.ReadRss),
 		(r"/pages/(.*)", web.StaticFileHandler, {"path": static_path}),
-    ],thread_mode=True,thread_num=200)
+    ])
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(80,address="0.0.0.0")
     log.info("Server start at %d",80)
