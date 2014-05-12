@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+ 
+<head>
+ <meta charset="utf8">
+<link rel="stylesheet" href="lungo/lungo.css">
+<link rel="stylesheet" href="lungo/lungo.icon.css">
+<link rel="stylesheet" href="lungo/lungo.theme.css">
+</head>
+<body>
+<section id="main">
+    <header data-title="云涛工作室">
+    </header>
+    <article id="article_rss" class="list">
+        <ul id="rss_list">
+   		</ul>
+    </article>
+    <footer>
+        <nav>
+            <a href="#" data-icon="menu" class="active"></a>
+            <a href="#" data-view-section="aboutme" data-icon="info-sign"></a>
+        </nav>
+    </footer>
+</section>
+<section id="aboutme">
+    <header data-title="云涛工作室">
+
+    </header>
+
+    <article id="a_aboutme" class="active">
+        
+    </article>
+    <footer>
+        <nav>
+            <a href="#" data-view-section="main" data-icon="menu"></a>
+            <a href="#" data-icon="info-sign" class="active"></a>
+        </nav>
+    </footer>
+</section>
+<script src="lungo/quo.js"></script>
+<script src="lungo/lungo.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/yuntao.js"></script>
+<script>
+Lungo.init({});
+$.get("/action/readrss",function(result){
+	var data = result.data;
+	var rss_list = $("#rss_list");
+	var template = "<li><strong>{0}</strong><small>{1}</small></li>"
+	for(var i=0;i<data.length;i++){
+		var feed = data[i]
+		rss_list.append(template.format(feed.title,feed.description));
+	}
+},"json")
+</script>
+</body>
+</html>

@@ -9,6 +9,7 @@ from yuntao import log
 from yuntao import dates
 import queue;
 
+
 class Task:
     def __init__(self,function,*args ,**kwargs):
         self.function = function
@@ -17,6 +18,7 @@ class Task:
     
     def _execute(self):
         self.function(*self.args,**self.kwargs)
+
 
 class FutureTask(Task):
     def __init__(self,function,*args,**kwargs):
@@ -47,8 +49,6 @@ class FutureTask(Task):
                     return self.result
         finally:
             self.lock.release()
-
-
 
 
 class ThreadPool:    
@@ -84,6 +84,7 @@ class ScheduleTask(Task):
         self.function = function
         self.args = args
         self.kwargs = kwargs
+
 
 class _CoreScheduleThread(Thread):
     def __init__(self,threadpool):
@@ -147,7 +148,6 @@ class _Worker(Thread):
                 task._execute()
             except Exception as e:
                 log.exception(e)
-                raise e;
 
                             
 def new_threadpool(threadnum):

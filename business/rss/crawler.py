@@ -7,7 +7,7 @@ from yuntao import dates
 from yuntao import log
 import re
 import xml.etree.ElementTree as etree
-class RssCrawler:
+class Crawler:
     def __init__(self):
         self.dao = dao.Dao("localhost", "yuntao", "root", "", 5)
         self.seeds = ["http://huoding.com/feed","http://2014.54chen.com/rss.xml"]
