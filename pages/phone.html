@@ -50,6 +50,9 @@ $.get("/action/readrss",function(result){
 		var article = $(template.format(feed.id,feed.title,feed.description))
 		article.bind("click",function(e){
 		    var article_id = $(e.target).parent("li").attr("article-id")
+		    if(article_id == undefined){
+		         article_id = $(e.target).attr("article-id")
+		    }
 		    $.get("/action/readarticle/"+article_id ,function(result){
 		        var data = result.data;
 		        var content = $("#content")
