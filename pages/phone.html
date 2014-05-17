@@ -25,22 +25,68 @@
    		</ul>
     </article>
 </section>
+<section id="content" data-transition="slide">
+    <header data-title="test" >
+        <nav class="left"><a href="#" data-view-section="back"><span class="icon chevron-left"></span></a></nav>
+    </header>
+    <article id="article_content" class="scroll" class="active">
+        <div>
+时间：2005.3-2008.2 信息管理中心
+部门：系统开发四部
+职位：实习生>java软件工程师>资深软件工程师
+汇报对象：分组经理
+工作职责：养老险相关系统开发
+个人业绩：完成综合查询系统开发及维护；完成航意险系统设计及核心代码编写。
+项目经历
+2013-12-01 —— 至今：天平网站及移动端优化项目
+描述：主要技术及平台：javascript、微信、jquery、opencms
+项目描述：对pc网站及移动端网页从多方面进行优化（减少请求数、压缩文件、引入合适的前端js框架）。
+职责：主导优化方案评估、实施验证、产品选型。
+2013-09-01 —— 至今：天平网销网站分析项目
+描述：主要技术及平台：Oracle（pl/sql）、java拦截器、GA
+项目描述：一期直接配置和使用GA；二期针对应用和访问日志，用package进行分析；三期引入商业软件进行挖掘和分析。
+职责：主导需求分析、IT方案设计、核心代码编写、商业软件评估、选型。
+2013-08-01 —— 至今：电销名单评分系统
+描述：主要技术及平台：Oracle（pl/sql）、jms
+项目描述：该系统主要实现对电销名单的打分，并根据分值自动将合适的名单分配给合适的坐席进行拨打。
+职责：主导需求分析、IT方案设计、DB分支核心代码编写、java分支项目管理。
+2012-10-01 —— 至今：风险定价系统
+描述：主要技术及平台：Oracle（pl/sql）、jms
+项目描述：该平台能够满足所有可线性化公式的自动运算。通过配置即可实现部分的精算及风险评估自动化。
+职责：主导需求分析、方案设计、jms平台搭建、DB核心代码编写。
+   		</div>
+    </article>
+</section>
 <script src="lungo/quo.js"></script>
 <script src="lungo/lungo.js"></script>
 <script src="js/jquery.js"></script>
 <script src="js/yuntao.js"></script>
 <script>
-
+Lungo.init({});
 $.get("/action/readrss",function(result){
 	var data = result.data;
 	var rss_list = $("#rss_list");
-	var template = "<li><strong>{0}</strong><small>{1}</small></li>"
+	var template = "<li data-view-section='content' article-id='{0}' ><strong>{1}</strong><small>{2}</small></li>"
+
 	for(var i=0;i<data.length;i++){
 		var feed = data[i]
-		rss_list.append(template.format(feed.title,feed.description));
+		var article = $(template.format(feed.id,feed.title,feed.description))
+		article.bind("click",function(e){
+		    var article_id = $(e.target).parent("li").attr("article-id")
+		    $.get("/action/readarticle/"+article_id ,function(result){
+		        var data = result.data;
+		        var content = $("#content")
+		        var head = content.find("header")
+                head.attr("data-title",data.title)
+                head.find("h1").remove()
+                var article_div = content.find("article")
+                article_div.html(data.description);
+                Lungo.Boot.Data.init("#content")
+		    },"json");
+		})
+		rss_list.append(article);
 	}
 },"json")
-Lungo.init({});
 </script>
 </body>
 </html>

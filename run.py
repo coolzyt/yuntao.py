@@ -30,6 +30,7 @@ def main():
     static_path = os.path.join(os.path.dirname(__file__),"./pages/")
     application = tornado.web.Application([
         (r"/action/readrss",business.rss.ReadRss),
+        (r"/action/readarticle/(\d+)",business.rss.ReadArticle),
 		(r"/pages/(.*)", web.StaticFileHandler, {"path": static_path}),
     ])
     http_server = tornado.httpserver.HTTPServer(application)

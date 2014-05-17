@@ -3,6 +3,8 @@
 # import pexpect
 # import os
 #
+# 这个脚本不支持python3，在我机器上会编译出错，不过在2下面可以用
+#
 # def ssh_command(cmd,password):
 #     ssh_newkey = 'Are you sure you want to continue connecting'
 #     child = pexpect.spawn(cmd)
