@@ -18,11 +18,17 @@
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
-from tornado.options import define, options
+from tornado.options import options
 from tornado import web
 from yuntao import log
 from yuntao import executors
 import business.rss.crawler
+import tornado.web;
+class RootRedirectHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.redirect("/pages/index.html")
+
+
 def main():
     #dao.init("127.0.0.1","yuntao",user="root",password="root",poolsize=5);
     import os
@@ -32,6 +38,7 @@ def main():
         (r"/action/readrss",business.rss.ReadRss),
         (r"/action/readarticle/(\d+)",business.rss.ReadArticle),
 		(r"/pages/(.*)", web.StaticFileHandler, {"path": static_path}),
+        (r"/", RootRedirectHandler),
     ])
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(80,address="0.0.0.0")
