@@ -10,7 +10,7 @@ import xml.etree.ElementTree as etree
 class Crawler:
     def __init__(self):
         self.dao = common.getdao()
-        self.seeds = ["http://huoding.com/feed","http://2014.54chen.com/rss.xml"]
+        self.seeds = ["http://huoding.com/feed","http://2014.54chen.com/rss.xml","http://coolshell.cn/feed","http://www.ideawu.net/blog/feed","http://timyang.net/feed/"]
   
     def fetchrss(self,url):
         page = http.fetchurl(url)
